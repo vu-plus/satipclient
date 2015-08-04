@@ -18,6 +18,8 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
+#include <unistd.h>
+
 extern int dbg_level;
 extern unsigned int dbg_mask; // MSG_DATA | MSG_MAIN | MSG_NET | MSG_HW | MSG_SRV
 extern int use_syslog;
@@ -42,3 +44,4 @@ extern int use_syslog;
 
 void write_message(const unsigned int, const int, const char*, ...);
 #endif // __LOG_H__
+
