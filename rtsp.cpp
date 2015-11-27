@@ -307,9 +307,13 @@ int satipRTSP::handleResponseSetup()
 	/* get session id */
 	ptr = strstr(m_rx_data, "Session: ");
 	if (ptr == NULL)
-		return RTSP_ERROR;
+	{
+		ptr = strstr(m_rx_data, "Session:");
+		if (ptr == NULL)
+			return RTSP_ERROR;
+	}
 
-	if (sscanf(ptr, "Session: %s", session_id) != 1)
+	if ((sscanf(ptr, "Session: %s", session_id) != 1) && (sscanf(ptr, "Session:%s", session_id) != 1))
 		return RTSP_ERROR;
 
 	ptr = strchr(session_id, ';');
@@ -332,9 +336,13 @@ int satipRTSP::handleResponseSetup()
 	/* get stream id */
 	ptr = strstr(m_rx_data, "com.ses.streamID: ");
 	if (ptr == NULL)
-		return RTSP_ERROR;
+	{
+		ptr = strstr(m_rx_data, "com.ses.streamID:");
+		if (ptr == NULL)
+			return RTSP_ERROR;
+	}
 
-	if (sscanf(ptr, "com.ses.streamID: %d", &m_rtsp_stream_id) != 1)
+	if ((sscanf(ptr, "com.ses.streamID: %d", &m_rtsp_stream_id) != 1) && (sscanf(ptr, "com.ses.streamID:%d", &m_rtsp_stream_id) != 1))
 		return RTSP_ERROR;
 
 	DEBUG(MSG_MAIN, "Session ID : %s\n", session_id);
