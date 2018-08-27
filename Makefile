@@ -6,16 +6,33 @@
 #VTUNER_TYPE = VTUNER_TYPE_ORIGINAL
 #
 #Based on definitions found in the "usbtunerhelper" tool.
+
+RM      := rm -fR
+
 VTUNER_TYPE = VTUNER_TYPE_VUPLUS
 
+CCEXT   := -march=armv7-a -mfloat-abi=hard -mfpu=neon --sysroot=$(SYSROOT)
+LDEXT   := --sysroot=$(SYSROOT)
+
+CXX     := $(CROSS)g++ $(CCEXT)
 CFLAGS += -Wall -g -D$(VTUNER_TYPE)
 
-OBJ = satip_rtp.o satip_vtuner.o satip_config.o \
-	satip_rtsp.o satip_main.o polltimer.o log.o
+LD      := $(CROSS)ld $(LDEXT)
+LDFLAGS := -lrt -lpthread
+
+CXXSRCS = $(wildcard ./*.cpp)
+OBJS    = $(CXXSRCS:.cpp=.o)
+
+%.o:%.cpp
+	$(CXX) -c $(CFLAGS) -o $@ $<
+
 BIN = satip-client
 
-$(BIN):  $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN) $(OBJ) -lrt -lpthread
+$(BIN):$(OBJS)
+	$(CXX) $(CFLAGS) -o $(BIN) $(OBJS) $(LDFLAGS)
+
+all:$(BIN)
 
 clean:
 	rm -f $(BIN) *.o *~
+
